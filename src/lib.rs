@@ -13,6 +13,8 @@ impl SvgBuilder {
         }
     }
 
+    // TODO: version, baseProfile 対応
+    // TODO: width, height 対応
     pub fn begin(&mut self) {
         self.content.push_str(
         r#"<svg version="1.1" baseProfile="full" width="300" height="200" xmlns="http://www.w3.org/2000/svg">
@@ -22,6 +24,7 @@ impl SvgBuilder {
     pub fn rect<'a>(&'a mut self, width: &'a str, height: &'a str) -> RectBuilder<'a> {
         RectBuilder {
             parent: self,
+            position: Position::new(),
             width,
             height,
         }
@@ -63,8 +66,21 @@ impl SvgBuilder {
     }
 }
 
+pub struct Position
+{
+    x: u32,
+    y: u32,
+}
+
+impl Position {
+    pub fn new() -> Position {
+        Position { x: 0, y: 0 }
+    }
+}
+
 pub struct RectBuilder<'a> {
     parent: &'a mut SvgBuilder,
+    position: Position,
     width: &'a str,
     height: &'a str,
 }
