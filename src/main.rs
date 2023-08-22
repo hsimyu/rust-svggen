@@ -5,7 +5,7 @@ fn main() {
 
     builder.begin();
 
-    builder.rect("100%", "100%");
+    builder.rect("100%", "100%").position(20, 80);
     builder.circle(150, 100, 80);
     builder.text(150, 125, 60, "SVG");
 

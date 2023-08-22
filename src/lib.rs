@@ -24,9 +24,9 @@ impl SvgBuilder {
     pub fn rect<'a>(&'a mut self, width: &'a str, height: &'a str) -> RectBuilder<'a> {
         RectBuilder {
             parent: self,
-            position: Position::new(),
             width,
             height,
+            attributes: vec![],
         }
     }
 
@@ -66,31 +66,54 @@ impl SvgBuilder {
     }
 }
 
-pub struct Position
+pub trait RectAttribute
+{
+    fn emit(&self, builder: &mut String);
+}
+
+struct Position
 {
     x: u32,
     y: u32,
 }
 
-impl Position {
-    pub fn new() -> Position {
-        Position { x: 0, y: 0 }
+impl RectAttribute for Position {
+    fn emit(&self, builder: &mut String) {
+        builder.push_str(format!("x=\"{:}\" y=\"{:}\"", self.x, self.y).as_str())
     }
 }
 
 pub struct RectBuilder<'a> {
     parent: &'a mut SvgBuilder,
-    position: Position,
     width: &'a str,
     height: &'a str,
+    attributes: Vec<Box<dyn RectAttribute>>,
+}
+
+impl RectBuilder<'_> {
+    fn add(&mut self, att: Box<dyn RectAttribute>)
+    {
+        self.attributes.push(att)
+    }
+
+    pub fn position(&mut self, x: u32, y: u32)
+    {
+        self.add(Box::new(Position {x, y}))
+    }
 }
 
 impl Drop for RectBuilder<'_> {
     fn drop(&mut self) {
-        let elem = format!(
-            "<rect width=\"{:}\" height=\"{:}\" />\n",
+        let mut elem = format!(
+            "<rect width=\"{:}\" height=\"{:}\" ",
             self.width, self.height
         );
+
+        for att in self.attributes.iter() {
+            att.emit(&mut elem);
+        }
+
+        elem += " />\n";
         self.parent.content.push_str(&elem);
     }
 }
