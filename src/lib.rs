@@ -23,12 +23,7 @@ impl SvgBuilder {
     }
 
     pub fn rect<'a>(&'a mut self, width: &'a str, height: &'a str) -> rect::RectBuilder<'a> {
-        rect::RectBuilder {
-            parent: self,
-            width,
-            height,
-            attributes: vec![],
-        }
+        rect::RectBuilder::new(self, width, height)
     }
 
     pub fn circle<'a>(&'a mut self, cx: u32, cy: u32, radius: u32) -> CircleBuilder<'a> {

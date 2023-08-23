@@ -30,18 +30,18 @@ impl RectAttribute for Radius {
 }
 
 pub struct RectBuilder<'a> {
-    pub parent: &'a mut SvgBuilder,
-    pub width: &'a str,
-    pub height: &'a str,
+    parent: &'a mut SvgBuilder,
+    width: &'a str,
+    height: &'a str,
 
     // TODO: HashMap のがよいだろう（もしくは dyn にしないで Box で持つ？）
-    pub attributes: Vec<Box<dyn RectAttribute>>,
+    attributes: Vec<Box<dyn RectAttribute>>,
 }
 
 impl RectBuilder<'_> {
-    fn add(&mut self, att: Box<dyn RectAttribute>)
+    pub fn new<'a>(parent: &'a mut SvgBuilder, width: &'a str, height: &'a str) -> RectBuilder<'a>
     {
-        self.attributes.push(att)
+        RectBuilder { parent, width, height, attributes: vec![] }
     }
 
     pub fn position(&mut self, x: u32, y: u32) -> &mut Self
@@ -55,10 +55,16 @@ impl RectBuilder<'_> {
         self.add(Box::new(Radius{rx: rx, ry: ry}));
         self
     }
+
+    fn add(&mut self, att: Box<dyn RectAttribute>)
+    {
+        self.attributes.push(att)
+    }
 }
 
 impl Drop for RectBuilder<'_> {
     fn drop(&mut self) {
+        // String の最大容量を決め打ちで確保しておくことで生成を高速化できそう
         let mut elem = format!(
             "<rect width=\"{:}\" height=\"{:}\" ",
             self.width, self.height
