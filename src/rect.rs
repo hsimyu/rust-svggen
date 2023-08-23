@@ -1,17 +1,12 @@
 use super::SvgBuilder;
 
-pub trait RectAttribute
-{
-    fn emit(&self, builder: &mut String);
-}
-
 struct Position
 {
     x: u32,
     y: u32,
 }
 
-impl RectAttribute for Position {
+impl Position {
     fn emit(&self, builder: &mut String) {
         builder.push_str(format!("x=\"{:}\" y=\"{:}\"", self.x, self.y).as_str())
     }
@@ -23,7 +18,7 @@ struct Radius
     ry: u32,
 }
 
-impl RectAttribute for Radius {
+impl Radius {
     fn emit(&self, builder: &mut String) {
         builder.push_str(format!("rx=\"{:}\" ry=\"{:}\"", self.rx, self.ry).as_str())
     }
@@ -34,31 +29,26 @@ pub struct RectBuilder<'a> {
     width: &'a str,
     height: &'a str,
 
-    // TODO: HashMap のがよいだろう（もしくは dyn にしないで Box で持つ？）
-    attributes: Vec<Box<dyn RectAttribute>>,
+    position: Option<Position>,
+    radius: Option<Radius>
 }
 
 impl RectBuilder<'_> {
     pub fn new<'a>(parent: &'a mut SvgBuilder, width: &'a str, height: &'a str) -> RectBuilder<'a>
     {
-        RectBuilder { parent, width, height, attributes: vec![] }
+        RectBuilder { parent, width, height, position: None, radius: None }
     }
 
     pub fn position(&mut self, x: u32, y: u32) -> &mut Self
     {
-        self.add(Box::new(Position {x, y}));
+        self.position = Some( Position { x, y });
         self
     }
 
     pub fn corner_radius(&mut self, rx: u32, ry: u32) -> &mut Self
     {
-        self.add(Box::new(Radius{rx: rx, ry: ry}));
+        self.radius = Some( Radius { rx, ry });
         self
-    }
-
-    fn add(&mut self, att: Box<dyn RectAttribute>)
-    {
-        self.attributes.push(att)
     }
 }
 
@@ -70,8 +60,13 @@ impl Drop for RectBuilder<'_> {
             self.width, self.height
         );
 
-        for att in self.attributes.iter() {
-            att.emit(&mut elem);
+        if let Some(pos) = self.position.as_ref() {
+            pos.emit(&mut elem);
+            elem += " ";
+        }
+
+        if let Some(r) = self.radius.as_ref() {
+            r.emit(&mut elem);
             elem += " ";
         }
 
