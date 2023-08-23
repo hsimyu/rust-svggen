@@ -1,36 +1,13 @@
 use super::SvgBuilder;
-
-struct Position
-{
-    x: u32,
-    y: u32,
-}
-
-impl Position {
-    fn emit(&self, builder: &mut String) {
-        builder.push_str(format!("x=\"{:}\" y=\"{:}\"", self.x, self.y).as_str())
-    }
-}
-
-struct Radius
-{
-    rx: u32,
-    ry: u32,
-}
-
-impl Radius {
-    fn emit(&self, builder: &mut String) {
-        builder.push_str(format!("rx=\"{:}\" ry=\"{:}\"", self.rx, self.ry).as_str())
-    }
-}
+use super::attribute;
 
 pub struct RectBuilder<'a> {
     parent: &'a mut SvgBuilder,
     width: &'a str,
     height: &'a str,
 
-    position: Option<Position>,
-    radius: Option<Radius>
+    position: Option<attribute::Position>,
+    radius: Option<attribute::Radius>
 }
 
 impl RectBuilder<'_> {
@@ -41,13 +18,13 @@ impl RectBuilder<'_> {
 
     pub fn position(&mut self, x: u32, y: u32) -> &mut Self
     {
-        self.position = Some( Position { x, y });
+        self.position = Some( attribute::Position { x, y });
         self
     }
 
     pub fn corner_radius(&mut self, rx: u32, ry: u32) -> &mut Self
     {
-        self.radius = Some( Radius { rx, ry });
+        self.radius = Some( attribute::Radius { rx, ry });
         self
     }
 }

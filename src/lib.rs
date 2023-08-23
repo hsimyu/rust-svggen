@@ -2,6 +2,7 @@ use std::error::Error;
 use std::fs::File;
 use std::io::prelude::*;
 mod rect;
+mod attribute;
 
 pub struct SvgBuilder {
     content: String,
