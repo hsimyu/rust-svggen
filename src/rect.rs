@@ -7,13 +7,14 @@ pub struct RectBuilder<'a> {
     height: &'a str,
 
     position: Option<attribute::Position>,
-    radius: Option<attribute::Radius>
+    radius: Option<attribute::Radius>,
+    fill: Option<attribute::Fill>,
 }
 
 impl RectBuilder<'_> {
     pub fn new<'a>(parent: &'a mut SvgBuilder, width: &'a str, height: &'a str) -> RectBuilder<'a>
     {
-        RectBuilder { parent, width, height, position: None, radius: None }
+        RectBuilder { parent, width, height, position: None, radius: None, fill: None }
     }
 
     pub fn position(&mut self, x: u32, y: u32) -> &mut Self
@@ -25,6 +26,14 @@ impl RectBuilder<'_> {
     pub fn corner_radius(&mut self, rx: u32, ry: u32) -> &mut Self
     {
         self.radius = Some( attribute::Radius { rx, ry });
+        self
+    }
+
+    pub fn fill(&mut self, color: &str, opacity: f32) -> &mut Self
+    {
+        let mut color_s = String::new();
+        color_s.push_str(color);
+        self.fill = Some( attribute::Fill { color: color_s, opacity });
         self
     }
 }
@@ -44,6 +53,11 @@ impl Drop for RectBuilder<'_> {
 
         if let Some(r) = self.radius.as_ref() {
             r.emit(&mut elem);
+            elem += " ";
+        }
+
+        if let Some(f) = self.fill.as_ref() {
+            f.emit(&mut elem);
             elem += " ";
         }
 
