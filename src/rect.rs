@@ -9,12 +9,13 @@ pub struct RectBuilder<'a> {
     position: Option<attribute::Position>,
     radius: Option<attribute::Radius>,
     fill: Option<attribute::Fill>,
+    stroke: Option<attribute::Stroke>,
 }
 
 impl RectBuilder<'_> {
     pub fn new<'a>(parent: &'a mut SvgBuilder, width: &'a str, height: &'a str) -> RectBuilder<'a>
     {
-        RectBuilder { parent, width, height, position: None, radius: None, fill: None }
+        RectBuilder { parent, width, height, position: None, radius: None, fill: None, stroke:None }
     }
 
     pub fn position(&mut self, x: u32, y: u32) -> &mut Self
@@ -29,11 +30,21 @@ impl RectBuilder<'_> {
         self
     }
 
+    // background-color
     pub fn fill(&mut self, color: &str, opacity: f32) -> &mut Self
     {
         let mut color_s = String::new();
         color_s.push_str(color);
         self.fill = Some( attribute::Fill { color: color_s, opacity });
+        self
+    }
+
+    // border
+    pub fn stroke(&mut self, color: &str, opacity: f32) -> &mut Self
+    {
+        let mut color_s = String::new();
+        color_s.push_str(color);
+        self.stroke = Some( attribute::Stroke { color: color_s, opacity });
         self
     }
 }
@@ -58,6 +69,11 @@ impl Drop for RectBuilder<'_> {
 
         if let Some(f) = self.fill.as_ref() {
             f.emit(&mut elem);
+            elem += " ";
+        }
+
+        if let Some(s) = self.stroke.as_ref() {
+            s.emit(&mut elem);
             elem += " ";
         }
 

@@ -34,3 +34,16 @@ impl Fill {
         builder.push_str(format!("fill=\"{:}\" fill-opacity=\"{:}\"", self.color, self.opacity).as_str())
     }
 }
+
+pub struct Stroke
+{
+    pub color: String,
+    pub opacity: f32,
+}
+
+impl Stroke {
+    pub fn emit(&self, builder: &mut String) {
+        // TODO: opacity を Option に
+        builder.push_str(format!("stroke=\"{:}\" stroke-opacity=\"{:}\"", self.color, self.opacity).as_str())
+    }
+}
