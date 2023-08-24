@@ -35,15 +35,33 @@ impl Fill {
     }
 }
 
+pub enum StrokeLinecap {
+    Butt,
+    Square,
+    Round,
+}
+
 pub struct Stroke
 {
     pub color: String,
-    pub opacity: f32,
+    pub opacity: Option<f32>,
+    pub linecap: Option<StrokeLinecap>,
 }
 
 impl Stroke {
     pub fn emit(&self, builder: &mut String) {
-        // TODO: opacity を Option に
-        builder.push_str(format!("stroke=\"{:}\" stroke-opacity=\"{:}\"", self.color, self.opacity).as_str())
+        builder.push_str(format!("stroke=\"{:}\"", self.color).as_str());
+
+        if let Some(op) = self.opacity.as_ref() {
+            builder.push_str(format!("stroke-opacity=\"{:}\"", op).as_str());
+        }
+
+        if let Some(linecap) = self.linecap.as_ref() {
+            match linecap {
+                StrokeLinecap::Butt => builder.push_str("stroke-linecap=\"butt\""),
+                StrokeLinecap::Square => builder.push_str("stroke-linecap=\"square\""),
+                StrokeLinecap::Round => builder.push_str("stroke-linecap=\"round\""),
+            }
+        }
     }
 }

@@ -44,7 +44,7 @@ impl RectBuilder<'_> {
     {
         let mut color_s = String::new();
         color_s.push_str(color);
-        self.stroke = Some( attribute::Stroke { color: color_s, opacity });
+        self.stroke = Some( attribute::Stroke { color: color_s, opacity: Some(opacity), linecap: None });
         self
     }
 }
