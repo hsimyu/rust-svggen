@@ -1,5 +1,5 @@
-use super::SvgBuilder;
 use super::attribute;
+use super::SvgBuilder;
 
 pub struct RectBuilder<'a> {
     parent: &'a mut SvgBuilder,
@@ -13,38 +13,44 @@ pub struct RectBuilder<'a> {
 }
 
 impl RectBuilder<'_> {
-    pub fn new<'a>(parent: &'a mut SvgBuilder, width: &'a str, height: &'a str) -> RectBuilder<'a>
-    {
-        RectBuilder { parent, width, height, position: None, radius: None, fill: None, stroke:None }
+    pub fn new<'a>(parent: &'a mut SvgBuilder, width: &'a str, height: &'a str) -> RectBuilder<'a> {
+        RectBuilder {
+            parent,
+            width,
+            height,
+            position: None,
+            radius: None,
+            fill: None,
+            stroke: None,
+        }
     }
 
-    pub fn position(&mut self, x: u32, y: u32) -> &mut Self
-    {
-        self.position = Some( attribute::Position { x, y });
+    pub fn position(&mut self, x: u32, y: u32) -> &mut Self {
+        self.position = Some(attribute::Position { x, y });
         self
     }
 
-    pub fn corner_radius(&mut self, rx: u32, ry: u32) -> &mut Self
-    {
-        self.radius = Some( attribute::Radius { rx, ry });
+    pub fn corner_radius(&mut self, rx: u32, ry: u32) -> &mut Self {
+        self.radius = Some(attribute::Radius { rx, ry });
         self
     }
 
     // background-color
-    pub fn fill(&mut self, color: &str, opacity: f32) -> &mut Self
-    {
+    pub fn fill(&mut self, color: &str, opacity: f32) -> &mut Self {
         let mut color_s = String::new();
         color_s.push_str(color);
-        self.fill = Some( attribute::Fill { color: color_s, opacity });
+        self.fill = Some(attribute::Fill {
+            color: color_s,
+            opacity: Some(opacity),
+        });
         self
     }
 
     // border
-    pub fn stroke(&mut self, color: &str, opacity: f32) -> &mut Self
-    {
-        let mut color_s = String::new();
-        color_s.push_str(color);
-        self.stroke = Some( attribute::Stroke { color: color_s, opacity: Some(opacity), linecap: None });
+    pub fn stroke(&mut self, color: &str, opacity: f32) -> &mut Self {
+        let mut stroke = attribute::Stroke::new(color);
+        stroke.opacity = Some(opacity);
+        self.stroke = Some(stroke);
         self
     }
 }
