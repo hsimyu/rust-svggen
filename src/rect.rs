@@ -47,9 +47,29 @@ impl RectBuilder<'_> {
     }
 
     // border
-    pub fn stroke(&mut self, color: &str, opacity: f32) -> &mut Self {
+    // TODO: linecap を指定したいけど opacity を指定したくないときは…？
+    pub fn stroke(&mut self, color: &str) -> &mut Self {
+        let stroke = attribute::Stroke::new(color);
+        self.stroke = Some(stroke);
+        self
+    }
+
+    pub fn stroke_with_opacity(&mut self, color: &str, opacity: f32) -> &mut Self {
         let mut stroke = attribute::Stroke::new(color);
         stroke.opacity = Some(opacity);
+        self.stroke = Some(stroke);
+        self
+    }
+
+    pub fn stroke_with_linecap(
+        &mut self,
+        color: &str,
+        opacity: f32,
+        linecap: attribute::StrokeLinecap,
+    ) -> &mut Self {
+        let mut stroke = attribute::Stroke::new(color);
+        stroke.opacity = Some(opacity);
+        stroke.linecap = Some(linecap);
         self.stroke = Some(stroke);
         self
     }
