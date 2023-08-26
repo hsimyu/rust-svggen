@@ -6,20 +6,12 @@ fn main() {
     builder.begin();
 
     builder
-        .rect("50%", "50%")
-        .position(10, 10)
-        .corner_radius(20, 20);
-
-    builder.rect("50%", "20%").stroke_with_opacity("red", 0.5);
-    builder
-        .rect("20%", "20%")
-        .position(20, 40)
-        .stroke_with_linecap("red", 0.5, svggen::attribute::StrokeLinecap::Round);
-
-    builder.circle(150, 100, 80);
-    builder.text(150, 125, 60, "SVG");
-
-    builder.path();
+        .path()
+        .move_to(10, 10)
+        .horizontal_line_to(90)
+        .vertical_line_to(90)
+        .horizontal_line_to(10)
+        .line_to(10, 10);
 
     builder.end();
 
