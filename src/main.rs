@@ -19,6 +19,8 @@ fn main() {
     builder.circle(150, 100, 80);
     builder.text(150, 125, 60, "SVG");
 
+    builder.path();
+
     builder.end();
 
     builder.save_as("myimage.svg").unwrap();

@@ -2,6 +2,7 @@ use std::error::Error;
 use std::fs::File;
 use std::io::prelude::*;
 pub mod attribute;
+mod path;
 mod rect;
 
 pub struct SvgBuilder {
@@ -50,6 +51,10 @@ impl SvgBuilder {
             font_size,
             text,
         }
+    }
+
+    pub fn path<'a>(&'a mut self) -> path::PathBuilder<'a> {
+        path::PathBuilder::new(self)
     }
 
     pub fn end(&mut self) {
