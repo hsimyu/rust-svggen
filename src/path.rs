@@ -55,6 +55,15 @@ impl PathCommand for VerticalLineToCommand {
     }
 }
 
+struct CloseCommand {}
+
+impl PathCommand for CloseCommand {
+    fn emit(&self, builder: &mut String) {
+        // TODO: Support relative
+        builder.push_str("Z");
+    }
+}
+
 impl PathBuilder<'_> {
     pub fn new<'a>(parent: &'a mut SvgBuilder) -> PathBuilder<'a> {
         PathBuilder {
@@ -80,6 +89,11 @@ impl PathBuilder<'_> {
 
     pub fn vertical_line_to(&mut self, y: u32) -> &mut Self {
         self.commands.push(Box::new(VerticalLineToCommand { y }));
+        self
+    }
+
+    pub fn close(&mut self) -> &mut Self {
+        self.commands.push(Box::new(CloseCommand {}));
         self
     }
 }

@@ -11,7 +11,7 @@ fn main() {
         .horizontal_line_to(90)
         .vertical_line_to(90)
         .horizontal_line_to(10)
-        .line_to(10, 10);
+        .close();
 
     builder.end();
 
