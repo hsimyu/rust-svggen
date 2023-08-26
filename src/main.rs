@@ -11,7 +11,9 @@ fn main() {
         .horizontal_line_to(90)
         .vertical_line_to(90)
         .horizontal_line_to(10)
-        .close();
+        .close()
+        .fill("blue", 0.4)
+        .stroke("red");
 
     builder.end();
 
