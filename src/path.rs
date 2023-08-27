@@ -119,6 +119,18 @@ impl PathCommand for Bezier2Command {
     }
 }
 
+struct Bezier2RepeatCommand {
+    x: i32,
+    y: i32,
+}
+
+impl PathCommand for Bezier2RepeatCommand {
+    fn emit(&self, builder: &mut String) {
+        // TODO: Support relative
+        builder.push_str(format!("T {:} {:}", self.x, self.y).as_str())
+    }
+}
+
 impl PathBuilder<'_> {
     pub fn new<'a>(parent: &'a mut SvgBuilder) -> PathBuilder<'a> {
         PathBuilder {
@@ -245,6 +257,12 @@ impl PathBuilder<'_> {
             x: end_x,
             y: end_y,
         }));
+        self
+    }
+
+    pub fn bezier2_repeat(&mut self, end_x: i32, end_y: i32) -> &mut Self {
+        self.commands
+            .push(Box::new(Bezier2RepeatCommand { x: end_x, y: end_y }));
         self
     }
 }

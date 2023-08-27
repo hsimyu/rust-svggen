@@ -39,7 +39,8 @@ fn main() {
     builder
         .path()
         .move_to(230, 10)
-        .bezier2(230, 80, 0, 80)
+        .bezier2(230, 80, 20, 80)
+        .bezier2_repeat(240, 150)
         .stroke("black")
         .fill("transparent", 0.0);
 
