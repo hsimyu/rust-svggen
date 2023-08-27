@@ -18,21 +18,21 @@ fn main() {
     builder
         .path()
         .move_to(10, 10)
-        .bezier(20, 20, 40, 20, 50, 10)
+        .bezier3(20, 20, 40, 20, 50, 10)
         .stroke("black")
         .fill("transparent", 0.0);
 
     builder
         .path()
         .move_to(70, 10)
-        .bezier(70, 20, 110, 20, 110, 10)
+        .bezier3(70, 20, 110, 20, 110, 10)
         .stroke("black")
         .fill("transparent", 0.0);
 
     builder
         .path()
         .move_to(110, 10)
-        .bezier_symmetric(190, 20, 230, 10)
+        .bezier3_symmetric(190, 20, 230, 10)
         .stroke("black")
         .fill("transparent", 0.0);
 

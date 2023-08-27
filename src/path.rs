@@ -69,7 +69,7 @@ impl PathCommand for CloseCommand {
     }
 }
 
-struct BezierCommand {
+struct Bezier3Command {
     x1: i32,
     y1: i32,
     x2: i32,
@@ -78,7 +78,7 @@ struct BezierCommand {
     y: i32,
 }
 
-impl PathCommand for BezierCommand {
+impl PathCommand for Bezier3Command {
     fn emit(&self, builder: &mut String) {
         // TODO: Support relative
         builder.push_str(
@@ -91,14 +91,14 @@ impl PathCommand for BezierCommand {
     }
 }
 
-struct BezierSymmetricCommand {
+struct Bezier3SymmetricCommand {
     x2: i32,
     y2: i32,
     x: i32,
     y: i32,
 }
 
-impl PathCommand for BezierSymmetricCommand {
+impl PathCommand for Bezier3SymmetricCommand {
     fn emit(&self, builder: &mut String) {
         // TODO: Support relative
         builder.push_str(format!("S {:} {:}, {:} {:}", self.x2, self.y2, self.x, self.y).as_str())
@@ -182,7 +182,7 @@ impl PathBuilder<'_> {
 
     // Bezier は始点も一緒に取るようにした方が分かりやすい？
     // でも、コマンドが MoveTo に制限されてしまうので微妙か。
-    pub fn bezier(
+    pub fn bezier3(
         &mut self,
         control_x1: i32,
         control_y1: i32,
@@ -191,7 +191,7 @@ impl PathBuilder<'_> {
         end_x: i32,
         end_y: i32,
     ) -> &mut Self {
-        self.commands.push(Box::new(BezierCommand {
+        self.commands.push(Box::new(Bezier3Command {
             x1: control_x1,
             y1: control_y1,
             x2: control_x2,
@@ -202,14 +202,14 @@ impl PathBuilder<'_> {
         self
     }
 
-    pub fn bezier_symmetric(
+    pub fn bezier3_symmetric(
         &mut self,
         control_x2: i32,
         control_y2: i32,
         end_x: i32,
         end_y: i32,
     ) -> &mut Self {
-        self.commands.push(Box::new(BezierSymmetricCommand {
+        self.commands.push(Box::new(Bezier3SymmetricCommand {
             x2: control_x2,
             y2: control_y2,
             x: end_x,
