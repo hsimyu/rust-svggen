@@ -105,6 +105,20 @@ impl PathCommand for Bezier3SymmetricCommand {
     }
 }
 
+struct Bezier2Command {
+    x1: i32,
+    y1: i32,
+    x: i32,
+    y: i32,
+}
+
+impl PathCommand for Bezier2Command {
+    fn emit(&self, builder: &mut String) {
+        // TODO: Support relative
+        builder.push_str(format!("Q {:} {:}, {:} {:}", self.x1, self.y1, self.x, self.y).as_str())
+    }
+}
+
 impl PathBuilder<'_> {
     pub fn new<'a>(parent: &'a mut SvgBuilder) -> PathBuilder<'a> {
         PathBuilder {
@@ -212,6 +226,22 @@ impl PathBuilder<'_> {
         self.commands.push(Box::new(Bezier3SymmetricCommand {
             x2: control_x2,
             y2: control_y2,
+            x: end_x,
+            y: end_y,
+        }));
+        self
+    }
+
+    pub fn bezier2(
+        &mut self,
+        control_x1: i32,
+        control_y1: i32,
+        end_x: i32,
+        end_y: i32,
+    ) -> &mut Self {
+        self.commands.push(Box::new(Bezier2Command {
+            x1: control_x1,
+            y1: control_y1,
             x: end_x,
             y: end_y,
         }));
