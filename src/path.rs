@@ -91,14 +91,14 @@ impl PathCommand for Bezier3Command {
     }
 }
 
-struct Bezier3SymmetricCommand {
+struct Bezier3RepeatCommand {
     x2: i32,
     y2: i32,
     x: i32,
     y: i32,
 }
 
-impl PathCommand for Bezier3SymmetricCommand {
+impl PathCommand for Bezier3RepeatCommand {
     fn emit(&self, builder: &mut String) {
         // TODO: Support relative
         builder.push_str(format!("S {:} {:}, {:} {:}", self.x2, self.y2, self.x, self.y).as_str())
@@ -228,14 +228,14 @@ impl PathBuilder<'_> {
         self
     }
 
-    pub fn bezier3_symmetric(
+    pub fn bezier3_repeat(
         &mut self,
         control_x2: i32,
         control_y2: i32,
         end_x: i32,
         end_y: i32,
     ) -> &mut Self {
-        self.commands.push(Box::new(Bezier3SymmetricCommand {
+        self.commands.push(Box::new(Bezier3RepeatCommand {
             x2: control_x2,
             y2: control_y2,
             x: end_x,

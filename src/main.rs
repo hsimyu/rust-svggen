@@ -32,7 +32,7 @@ fn main() {
     builder
         .path()
         .move_to(110, 10)
-        .bezier3_symmetric(190, 20, 230, 10)
+        .bezier3_repeat(190, 20, 230, 10)
         .stroke("black")
         .fill("transparent", 0.0);
 
