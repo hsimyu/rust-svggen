@@ -69,6 +69,28 @@ impl PathCommand for CloseCommand {
     }
 }
 
+struct BezierCommand {
+    x1: i32,
+    y1: i32,
+    x2: i32,
+    y2: i32,
+    x: i32,
+    y: i32,
+}
+
+impl PathCommand for BezierCommand {
+    fn emit(&self, builder: &mut String) {
+        // TODO: Support relative
+        builder.push_str(
+            format!(
+                "C {:} {:}, {:} {:}, {:} {:}",
+                self.x1, self.y1, self.x2, self.y2, self.x, self.y
+            )
+            .as_str(),
+        )
+    }
+}
+
 impl PathBuilder<'_> {
     pub fn new<'a>(parent: &'a mut SvgBuilder) -> PathBuilder<'a> {
         PathBuilder {
@@ -142,6 +164,18 @@ impl PathBuilder<'_> {
         self.stroke = Some(stroke);
         self
     }
+
+    pub fn bezier(&mut self, x1: i32, y1: i32, x2: i32, y2: i32, x: i32, y: i32) -> &mut Self {
+        self.commands.push(Box::new(BezierCommand {
+            x1,
+            y1,
+            x2,
+            y2,
+            x,
+            y,
+        }));
+        self
+    }
 }
 
 impl Drop for PathBuilder<'_> {
@@ -149,7 +183,6 @@ impl Drop for PathBuilder<'_> {
         // String の最大容量を決め打ちで確保しておくことで生成を高速化できそう
         let mut elem = format!("<path ");
 
-        // 直線コマンド
         elem += "d=\"";
         for command in self.commands.iter() {
             command.emit(&mut elem);

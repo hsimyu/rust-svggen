@@ -15,6 +15,13 @@ fn main() {
         .fill("blue", 0.4)
         .stroke("red");
 
+    builder
+        .path()
+        .move_to(10, 10)
+        .bezier(20, 20, 40, 20, 50, 10)
+        .stroke("black")
+        .fill("transparent", 0.0);
+
     builder.end();
 
     builder.save_as("myimage.svg").unwrap();
