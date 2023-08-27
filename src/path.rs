@@ -166,14 +166,22 @@ impl PathBuilder<'_> {
         self
     }
 
-    pub fn bezier(&mut self, x1: i32, y1: i32, x2: i32, y2: i32, x: i32, y: i32) -> &mut Self {
+    pub fn bezier(
+        &mut self,
+        control_x1: i32,
+        control_y1: i32,
+        control_x2: i32,
+        control_y2: i32,
+        end_x: i32,
+        end_y: i32,
+    ) -> &mut Self {
         self.commands.push(Box::new(BezierCommand {
-            x1,
-            y1,
-            x2,
-            y2,
-            x,
-            y,
+            x1: control_x1,
+            y1: control_y1,
+            x2: control_x2,
+            y2: control_y2,
+            x: end_x,
+            y: end_y,
         }));
         self
     }
