@@ -127,6 +127,7 @@ impl PathBuilder<'_> {
     }
 
     // background-color
+    // TODO: opacity 指定を分離する
     pub fn fill(&mut self, color: &str, opacity: f32) -> &mut Self {
         let mut color_s = String::new();
         color_s.push_str(color);
