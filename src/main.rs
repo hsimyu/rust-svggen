@@ -29,6 +29,13 @@ fn main() {
         .stroke("black")
         .fill("transparent", 0.0);
 
+    builder
+        .path()
+        .move_to(110, 10)
+        .bezier_symmetric(190, 20, 230, 10)
+        .stroke("black")
+        .fill("transparent", 0.0);
+
     builder.end();
 
     builder.save_as("myimage.svg").unwrap();
