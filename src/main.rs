@@ -44,6 +44,22 @@ fn main() {
         .stroke("black")
         .fill("transparent", 0.0);
 
+    builder
+        .path()
+        .move_to(230, 20)
+        .arc(svggen::path::ArcCommand {
+            radius_x: 45,
+            radius_y: 45,
+            rotation_in_degree: 0,
+            large_arc_flag: 0,
+            sweep_flag: 1,
+            x: 275,
+            y: 275,
+        })
+        .line_to(275, 230)
+        .close()
+        .fill("purple", 1.0);
+
     builder.end();
 
     builder.save_as("myimage.svg").unwrap();

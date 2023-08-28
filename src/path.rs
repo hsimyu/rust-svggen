@@ -131,6 +131,38 @@ impl PathCommand for Bezier2RepeatCommand {
     }
 }
 
+pub struct ArcCommand {
+    pub radius_x: u32,
+    pub radius_y: u32,
+    pub rotation_in_degree: i32,
+
+    // これを合わせてセットするメソッドを提供した方がよさそう
+    pub large_arc_flag: u32,
+    pub sweep_flag: u32,
+
+    pub x: i32,
+    pub y: i32,
+}
+
+impl PathCommand for ArcCommand {
+    fn emit(&self, builder: &mut String) {
+        // TODO: Support relative
+        builder.push_str(
+            format!(
+                "A {:} {:}, {:}, {:}, {:}, {:} {:}",
+                self.radius_x,
+                self.radius_y,
+                self.rotation_in_degree,
+                self.large_arc_flag,
+                self.sweep_flag,
+                self.x,
+                self.y
+            )
+            .as_str(),
+        )
+    }
+}
+
 impl PathBuilder<'_> {
     pub fn new<'a>(parent: &'a mut SvgBuilder) -> PathBuilder<'a> {
         PathBuilder {
@@ -262,6 +294,11 @@ impl PathBuilder<'_> {
 
     pub fn bezier2_repeat(&mut self, end_x: i32, end_y: i32) -> &mut Self {
         self.add_command(Bezier2RepeatCommand { x: end_x, y: end_y });
+        self
+    }
+
+    pub fn arc(&mut self, command: ArcCommand) -> &mut Self {
+        self.add_command(command);
         self
     }
 

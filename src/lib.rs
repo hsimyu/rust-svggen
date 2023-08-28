@@ -2,7 +2,7 @@ use std::error::Error;
 use std::fs::File;
 use std::io::prelude::*;
 pub mod attribute;
-mod path;
+pub mod path;
 mod rect;
 
 pub struct SvgBuilder {
@@ -20,7 +20,7 @@ impl SvgBuilder {
     // TODO: width, height 対応
     pub fn begin(&mut self) {
         self.content.push_str(
-        r#"<svg version="1.1" baseProfile="full" width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+        r#"<svg version="1.1" baseProfile="full" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
 "#);
     }
 
