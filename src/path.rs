@@ -142,27 +142,27 @@ impl PathBuilder<'_> {
     }
 
     pub fn move_to(&mut self, x: u32, y: u32) -> &mut Self {
-        self.commands.push(Box::new(MoveToCommand { x, y }));
+        self.add_command(MoveToCommand { x, y });
         self
     }
 
     pub fn line_to(&mut self, x: u32, y: u32) -> &mut Self {
-        self.commands.push(Box::new(LineToCommand { x, y }));
+        self.add_command(LineToCommand { x, y });
         self
     }
 
     pub fn horizontal_line_to(&mut self, x: u32) -> &mut Self {
-        self.commands.push(Box::new(HorizontalLineToCommand { x }));
+        self.add_command(HorizontalLineToCommand { x });
         self
     }
 
     pub fn vertical_line_to(&mut self, y: u32) -> &mut Self {
-        self.commands.push(Box::new(VerticalLineToCommand { y }));
+        self.add_command(VerticalLineToCommand { y });
         self
     }
 
     pub fn close(&mut self) -> &mut Self {
-        self.commands.push(Box::new(CloseCommand {}));
+        self.add_command(CloseCommand {});
         self
     }
 
@@ -217,14 +217,14 @@ impl PathBuilder<'_> {
         end_x: i32,
         end_y: i32,
     ) -> &mut Self {
-        self.commands.push(Box::new(Bezier3Command {
+        self.add_command(Bezier3Command {
             x1: control_x1,
             y1: control_y1,
             x2: control_x2,
             y2: control_y2,
             x: end_x,
             y: end_y,
-        }));
+        });
         self
     }
 
@@ -235,12 +235,12 @@ impl PathBuilder<'_> {
         end_x: i32,
         end_y: i32,
     ) -> &mut Self {
-        self.commands.push(Box::new(Bezier3RepeatCommand {
+        self.add_command(Bezier3RepeatCommand {
             x2: control_x2,
             y2: control_y2,
             x: end_x,
             y: end_y,
-        }));
+        });
         self
     }
 
@@ -251,19 +251,25 @@ impl PathBuilder<'_> {
         end_x: i32,
         end_y: i32,
     ) -> &mut Self {
-        self.commands.push(Box::new(Bezier2Command {
+        self.add_command(Bezier2Command {
             x1: control_x1,
             y1: control_y1,
             x: end_x,
             y: end_y,
-        }));
+        });
         self
     }
 
     pub fn bezier2_repeat(&mut self, end_x: i32, end_y: i32) -> &mut Self {
-        self.commands
-            .push(Box::new(Bezier2RepeatCommand { x: end_x, y: end_y }));
+        self.add_command(Bezier2RepeatCommand { x: end_x, y: end_y });
         self
+    }
+
+    fn add_command<T>(&mut self, command: T)
+    where
+        T: 'static + PathCommand,
+    {
+        self.commands.push(Box::new(command));
     }
 }
 
