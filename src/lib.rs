@@ -2,8 +2,10 @@ use std::error::Error;
 use std::fs::File;
 use std::io::prelude::*;
 pub mod attribute;
+mod circle;
 pub mod path;
 mod rect;
+mod text;
 
 pub struct SvgBuilder {
     content: String,
@@ -44,8 +46,8 @@ impl SvgBuilder {
         rect::RectBuilder::new(self, width, height)
     }
 
-    pub fn circle<'a>(&'a mut self, cx: u32, cy: u32, radius: u32) -> CircleBuilder<'a> {
-        CircleBuilder {
+    pub fn circle<'a>(&'a mut self, cx: u32, cy: u32, radius: u32) -> circle::CircleBuilder<'a> {
+        circle::CircleBuilder {
             parent: self,
             cx,
             cy,
@@ -59,8 +61,8 @@ impl SvgBuilder {
         y: u32,
         font_size: u32,
         text: &'a str,
-    ) -> TextBuilder<'a> {
-        TextBuilder {
+    ) -> text::TextBuilder<'a> {
+        text::TextBuilder {
             parent: self,
             x,
             y,
@@ -98,43 +100,5 @@ impl SvgBuilder {
         let mut f = File::create(file_name)?;
         f.write_all(self.content.as_bytes())?;
         Ok(())
-    }
-}
-
-pub struct CircleBuilder<'a> {
-    parent: &'a mut SvgBuilder,
-    cx: u32,
-    cy: u32,
-    radius: u32,
-}
-
-impl Drop for CircleBuilder<'_> {
-    fn drop(&mut self) {
-        let elem = format!(
-            "<circle cx=\"{:}\" cy=\"{:}\" radius=\"{:}\" />\n",
-            self.cx, self.cy, self.radius
-        );
-        self.parent.content.push_str(&elem);
-    }
-}
-
-pub struct TextBuilder<'a> {
-    parent: &'a mut SvgBuilder,
-    x: u32,
-    y: u32,
-    font_size: u32,
-    text: &'a str,
-}
-
-impl Drop for TextBuilder<'_> {
-    fn drop(&mut self) {
-        let mut elem = format!(
-            "<text x=\"{:}\" y=\"{:}\" font-size=\"{:}\" text-anchor=\"middle\" fill=\"white\">",
-            self.x, self.y, self.font_size
-        );
-        elem += self.text;
-        elem += "</text>\n";
-
-        self.parent.content.push_str(&elem);
     }
 }
