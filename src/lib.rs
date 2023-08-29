@@ -7,21 +7,37 @@ mod rect;
 
 pub struct SvgBuilder {
     content: String,
+
+    width: Option<String>,
+    height: Option<String>,
 }
 
 impl SvgBuilder {
     pub fn new() -> SvgBuilder {
         SvgBuilder {
             content: String::new(),
+            width: None,
+            height: None,
         }
     }
 
-    // TODO: version, baseProfile 対応
-    // TODO: width, height 対応
-    pub fn begin(&mut self) {
-        self.content.push_str(
-        r#"<svg version="1.1" baseProfile="full" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-"#);
+    // TODO: Self じゃなくて HeaderBuilder を返すとかのがいいかも？
+    pub fn begin(&mut self) -> &mut Self {
+        self
+    }
+
+    pub fn width(&mut self, v: &str) -> &mut Self {
+        let mut r = String::new();
+        r.push_str(v);
+        self.width = Some(r);
+        self
+    }
+
+    pub fn height(&mut self, v: &str) -> &mut Self {
+        let mut r = String::new();
+        r.push_str(v);
+        self.height = Some(r);
+        self
     }
 
     pub fn rect<'a>(&'a mut self, width: &'a str, height: &'a str) -> rect::RectBuilder<'a> {
@@ -58,7 +74,24 @@ impl SvgBuilder {
     }
 
     pub fn end(&mut self) {
-        self.content.push_str(r#"</svg>"#);
+        let mut header = String::new();
+        header.push_str("<svg ");
+
+        if let Some(v) = self.width.as_ref() {
+            header.push_str(format!("width={:} ", v).as_str());
+        }
+
+        if let Some(v) = self.height.as_ref() {
+            header.push_str(format!("height={:} ", v).as_str());
+        }
+
+        // これは SVG 要素がトップの時だけ必要
+        header.push_str(format!("xmlns=\"http://www.w3.org/2000/svg\">\n").as_str());
+
+        let content = self.content.clone();
+        let footer = "</svg>";
+
+        self.content = header + &content + footer;
     }
 
     pub fn save_as(&self, file_name: &str) -> Result<(), Box<dyn Error>> {
